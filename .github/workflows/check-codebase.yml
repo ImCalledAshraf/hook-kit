@@ -158,3 +158,6 @@ jobs:
           
       - name: Upload Storybook
         run: yarn storybook:upload
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
