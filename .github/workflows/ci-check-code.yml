@@ -1,0 +1,123 @@
+name: 💫 Check Codebase 💫 [Build - Storybook - Lint - UnitTest - Publish]
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: ♻ Build
+    runs-on: ubuntu-latest
+    steps:
+       - name: Check out repository
+         uses: actions/checkout@v2
+
+       - name: Setup node
+         uses: actions/setup-node@v2
+         with:
+           node-version: 16
+
+       - name: Install dependencies
+         run: yarn install --frozen-lockfile
+
+       - name: Run build
+         run: yarn build
+
+  storybook:
+     name: ✍ Storybook
+     runs-on: ubuntu-latest
+     steps:
+       - name: Check out repository
+         uses: actions/checkout@v2
+
+       - name: Setup node
+         uses: actions/setup-node@v1
+         with:
+           node-version: 16
+
+       - name: Install dependencies
+         run: yarn install --frozen-lockfile
+
+       - name: Run build:storybook
+         run: yarn storybook:build
+
+  lint:
+     name: 🎀 Linting
+     runs-on: ubuntu-latest
+     steps:
+       - name: Check out repository
+         uses: actions/checkout@v2
+
+       - name: Setup node
+         uses: actions/setup-node@v2
+         with:
+           node-version: 16
+
+       - name: Install dependencies
+         run: yarn install --frozen-lockfile
+
+       - name: Lint with ESLint
+         run: yarn lint
+
+       - name: Lint with TSC
+         if: ${{ always() }}
+         run: yarn lint:types
+
+  unit-tests:
+     name: ✔ Unit tests
+     runs-on: ${{ matrix.os }}
+     strategy:
+       matrix:
+         os: [ubuntu-latest]
+         node: [18]
+         exclude:
+           - os: macos-latest
+             node: 12
+     steps:
+       - name: Check out repository
+         uses: actions/checkout@v2
+
+       - name: Setup node
+         uses: actions/setup-node@v2
+         with:
+           node-version: ${{ matrix.node }}
+
+       - name: Install dependencies
+         run: yarn install --frozen-lockfile
+
+       - name: Run unit tests
+         run: yarn test
+
+  publish:
+     name : 🎉 Publish
+     if: ${{ github.ref == 'refs/heads/main' }}
+     needs: [build,storybook,lint,unit-tests]
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v2
+         with:
+           persist-credentials: false
+       - uses: actions/setup-node@v1
+         with:
+           node-version: 14
+       - name: Restore node modules cache
+         uses: actions/cache@v2
+         env:
+           cache-name: cache-node-modules
+         with:
+           path: node_modules
+           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+       - name: Install Dependencies
+         run: yarn install
+       - name: Build
+         run: yarn build
+       - name: Release
+         env:
+           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         run: yarn release
+
