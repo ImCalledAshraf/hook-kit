@@ -140,15 +140,15 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install Dependencies
         run: yarn install
-      - name: Build
-        run: yarn build
+#       - name: Build
+#         run: yarn build
 
       - name: Build Storybook
         run: yarn storybook:build
 
 #       - run: git config --global user.email 'mrswaty@outlook.com'
 #       - run: git config --global user.name 'Ashraf Nakouri'
-      - name: Config Github
+#       - name: Config Github
       - run: git remote set-url origin https://ImCalledAshraf:${{ secrets.GITHUB_PAGES }}@github.com/ImCalledAshraf/hook-kit.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
