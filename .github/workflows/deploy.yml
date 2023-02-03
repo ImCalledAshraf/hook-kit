@@ -1,50 +1,18 @@
-name: Deploy
+name: Build and Publish storybook to GitHub Pages
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+      - "main"
 jobs:
   deploy:
-    name : 🎉 Deploy
-#     if: ${{ github.ref == 'refs/heads/main' }}
-#     needs: [publish]
+    environment:
+      name: github-pages
+      url: ${{ steps.build-publish.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - name: Restore node modules cache
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-      - name: Install Dependencies
-        run: yarn install
-#       - name: Build
-#         run: yarn build
-
-      - name: Build Storybook
-        run: yarn storybook:build
-
-#       - run: git remote set-url origin https://ImCalledAshraf:${{ secrets.GITHUB_PAGES }}@github.com/ImCalledAshraf/hook-kit.git
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       - run: git config --global user.email 'mrswaty@outlook.com'
-#       - run: git config --global user.name 'Ashraf Nakouri'
-      
-                  
-      - name: Upload Storybook
-        run: yarn storybook:upload
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           token: ${{ secrets.GITHUB_TOKEN }}
+    - id: build-publish
+      uses: bitovi/github-actions-react-to-ghp@v1.2.0
+      with:
+        path: ./storybook-static
+        build_command: yarn storybook:build
