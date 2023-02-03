@@ -146,5 +146,11 @@ jobs:
       - name: Build Storybook
         run: yarn storybook:build
 
+      - name: Config Github
+        run: 
+          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'github-actions'
+          git remote set-url origin https://${{ secrets.PAT }}@github.com/ImCalledAshraf/hook-kit.git
+          
       - name: Upload Storybook
         run: yarn storybook:upload
