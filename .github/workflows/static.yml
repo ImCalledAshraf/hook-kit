@@ -32,6 +32,24 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v3
+        
+      - name: Restore node modules cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          
+      - name: Install Dependencies
+        run: yarn install
+        
+      - name: Build
+        run: yarn build
+
+      - name: Build Storybook
+        run: yarn storybook:build
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
