@@ -117,11 +117,11 @@ jobs:
       - name: Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn release
   deploy:
     name : 🎉 Deploy
-    if: ${{ github.ref == 'refs/heads/main' }}
+#     if: ${{ github.ref == 'refs/heads/main' }}
     needs: [build,storybook,lint,unit-tests,publish]
     runs-on: ubuntu-latest
     steps:
