@@ -1,10 +1,10 @@
 export const noop = () => {};
-
 export function on<T extends Window | Document | HTMLElement | EventTarget>(
   obj: T | null,
   ...args: Parameters<T['addEventListener']> | [string, Function | null, ...any]
 ): void {
-  if (obj && obj.addEventListener) {
+  // Check if obj is not null and obj.addEventListener is a function
+  if (obj && typeof obj.addEventListener === 'function') {
     obj.addEventListener(...(args as Parameters<HTMLElement['addEventListener']>));
   }
 }

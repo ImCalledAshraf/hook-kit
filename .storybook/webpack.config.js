@@ -8,15 +8,12 @@ module.exports = async ({ config, mode }) => {
   config.module.rules.push(
     {
       test: /\.md?$/,
-      loader: "markdown-loader",
+      loader: 'markdown-loader',
     },
     {
       test: /\.tsx?$/,
       loader: 'ts-loader',
-      include: [
-        path.join(basedir, 'src'),
-        path.join(basedir, 'stories'),
-      ],
+      include: [path.join(basedir, 'src'), path.join(basedir, 'stories')],
       options: {
         transpileOnly: true, // use transpileOnly mode to speed-up compilation
         compilerOptions: {
@@ -24,7 +21,7 @@ module.exports = async ({ config, mode }) => {
           declaration: false,
         },
       },
-    },
+    }
   );
 
   config.plugins.push(new ForkTsCheckerWebpackPlugin());

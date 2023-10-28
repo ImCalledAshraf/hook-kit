@@ -12,7 +12,7 @@
   "types": "lib/index.d.ts",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "start": "yarn storybook --disable-telemetry",
+    "start": "yarn storybook",
     "test": "jest --maxWorkers 2",
     "test:ssr": "jest --maxWorkers 2 --config ./jest.config.node.ts",
     "test:watch": "jest --watch",
