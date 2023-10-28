@@ -8,7 +8,7 @@ module.exports = {
     '@storybook/addon-actions/register',
     '@storybook/addon-notes/register',
   ],
-  staticDirs: ['../stories/public'],
+  // staticDirs: ['../stories/public'],
 
   framework: '@storybook/react',
   //   core: {
